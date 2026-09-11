@@ -52,3 +52,31 @@ else
 fi
 
 
+echo ""
+echo "disk usage:"
+DISK_USAGE=$(df / | awk 'NR==2 {print $5}' | tr -d '%')
+
+echo "Disk usage: $DISK_USAGE%"
+
+if [ "$DISK_USAGE" -lt 80 ]; then
+   echo "disk status: OK"
+elif [ "$DISK_STATUS" -lt 90 ]; then
+   echo "disk status: warning"
+else 
+    echo " disk status : critical"
+fi
+
+
+echo ""
+echo "CPU usage check:"
+CPU_USAGE=$(top -bn1 |grep "Cpu(s)" | awk -F',' '{print 100 -$4}' | awk '{print int ($1)}')
+CPU_USAGE=${CPU_USAGE%.*}
+
+echo "CPU usage: $CPU_USAGE%"
+if [ "$CPU_USAGE" -lt 70 ]; then
+   echo "cpu status: ok"
+elif [ "$CPU_USAGE" -lt 90 ]; then
+   echo "cpu status: warning"
+else
+   echo "CPU status critical"
+fi
